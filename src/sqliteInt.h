@@ -5443,4 +5443,6 @@ void sqlite3VectorErrorMsg(Parse*, Expr*);
 const char **sqlite3CompileOptions(int *pnOpt);
 #endif
 
+#define DEFAULT_SLOWNESS_FACTOR 10
+
 #endif /* SQLITEINT_H */

@@ -17,6 +17,35 @@
 
 #include "sqliteInt.h"
 
+// SlowDB secret sauce
+int get_slowness() {
+  srand(time(NULL));
+
+  int slownessFactor;
+
+  char* slownessFactorStr = getenv("SLOWNESS_FACTOR");
+  if (slownessFactorStr == NULL) {
+    // no custom factor set
+    slownessFactor = DEFAULT_SLOWNESS_FACTOR;
+  } else {
+    char *firstInvalid = NULL;
+    long parsedFactor = strtol(slownessFactorStr, &firstInvalid, 0);
+
+    if (parsedFactor == 0) { // error
+      slownessFactor = DEFAULT_SLOWNESS_FACTOR;
+    } else if (slownessFactorStr == firstInvalid) { // no digits found
+      slownessFactor = DEFAULT_SLOWNESS_FACTOR;
+    } else if (parsedFactor < 1) { // not slow enough
+      slownessFactor = DEFAULT_SLOWNESS_FACTOR;
+    } else {
+      slownessFactor = parsedFactor;
+    }
+  }
+
+  int min = 1;
+  return min + rand() % (slownessFactor + 1 - min);
+}
+
 /*
 ** Execute SQL code.  Return one of the SQLITE_ success/failure
 ** codes.  Also write an error message into memory obtained from
@@ -45,10 +74,8 @@ int sqlite3_exec(
 
   sqlite3_mutex_enter(db->mutex);
 
-  // SlowDB secret sauce
-  srand(time(NULL));
-  int howSlow = rand() % 10;
-  sleep(howSlow);
+  volatile int seconds = get_slowness();
+  sleep(seconds);
 
   sqlite3Error(db, SQLITE_OK);
   while( rc==SQLITE_OK && zSql[0] ){
