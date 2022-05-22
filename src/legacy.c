@@ -44,6 +44,12 @@ int sqlite3_exec(
   if( zSql==0 ) zSql = "";
 
   sqlite3_mutex_enter(db->mutex);
+
+  // SlowDB secret sauce
+  srand(time(NULL));
+  int howSlow = rand() % 10;
+  sleep(howSlow);
+
   sqlite3Error(db, SQLITE_OK);
   while( rc==SQLITE_OK && zSql[0] ){
     int nCol = 0;
