@@ -1,11 +1,27 @@
 # SlowDB
 
 This is a lightweight slow database, useful for many of the same use cases as
-blockchains.
+blockchains, but it's more flexible.
 
-It's useful to compare to other industry-standard databases like SQLite:
+In its default configuration, it neatly sidesteps many of [the distributed
+systems
+problems](https://www.the-paper-trail.org/post/2014-08-09-distributed-systems-theory-for-the-distributed-systems-engineer/)
+that make blockchain systems difficult to develop.
+
+It implements most of the SQL-92 standard and can be extended in
+[numerous](https://tailscale.com/blog/database-for-2022/)
+[ways](https://blog.cloudflare.com/introducing-d1/).
+
+It's useful to compare the out-of-the-box defaults against other
+"industry-standard" databases like SQLite:
 
 <img width="1007" alt="Comparison clearing showing slower performance with SlowDB" src="https://user-images.githubusercontent.com/15069/169697189-258eda5d-c437-4bf1-9a10-1a72c54a0a8b.png" />
+
+As you can see, performance with SlowDB is slow enough to satisfy most needs.
+
+But if your platform needs even slower performance, you can set the environment
+variable `SLOWNESS_FACTOR` to a higher value to get even slower (the default
+slowness factor is 10).
 
 
 ## Benchmarks
